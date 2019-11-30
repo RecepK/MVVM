@@ -16,9 +16,17 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField "String", "BASE_URL", '"http://www.json-generator.com/api/json/"'
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField "String", "BASE_URL", '"http://www.json-generator.com/api/json/"'
         }
     }
 }
@@ -36,4 +44,11 @@ dependencies {
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel:2.1.0"
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:2.6.1"
+    implementation "com.squareup.retrofit2:converter-gson:2.6.1"
+
+    // Http Logging
+    implementation "com.squareup.okhttp3:logging-interceptor:3.9.1"
 }
