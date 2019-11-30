@@ -18,6 +18,14 @@ public class DataProvider {
 
     private RemoteRepository remoteRepository;
 
+    public LocalRepository getLocalRepository() {
+        return localRepository;
+    }
+
+    public RemoteRepository getRemoteRepository() {
+        return remoteRepository;
+    }
+
     public DataProvider(@NonNull Context context) {
         localRepository = new LocalRepository(context);
         remoteRepository = new RemoteRepository();

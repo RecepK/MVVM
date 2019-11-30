@@ -16,12 +16,15 @@ import com.kurban.mvvm.data.local.LocalModel;
 import com.kurban.mvvm.data.remote.RemoteModel;
 import com.kurban.mvvm.viewmodel.MainViewModel;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     private MainViewModel viewModel;
 
     private TextView tvLocal;
     private TextView tvRemote;
+    private TextView tvDatabase;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,12 +39,21 @@ public class MainActivity extends AppCompatActivity {
     private void initUI() {
         tvLocal = findViewById(R.id.localTextView);
         tvRemote = findViewById(R.id.remoteTextView);
+        tvDatabase = findViewById(R.id.dbTextView);
 
         Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 buttonClicked();
+            }
+        });
+
+        button.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                buttonLongClicked();
+                return true;
             }
         });
     }
@@ -54,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private void setViewModel() {
         viewModel.getLocalData().observe(MainActivity.this, localDataObserver);
         viewModel.getRemoteData().observe(MainActivity.this, remoteDataObserver);
+        viewModel.getAllDBData().observe(MainActivity.this, dbDataObserver);
     }
 
     private void setTextLocal(String value) {
@@ -64,8 +77,16 @@ public class MainActivity extends AppCompatActivity {
         viewModel.buttonClicked();
     }
 
+    private void buttonLongClicked() {
+        viewModel.buttonLongClicked();
+    }
+
     private void setTextRemote(String value) {
         tvRemote.setText(value);
+    }
+
+    private void setTextDB(String value) {
+        tvDatabase.setText(value);
     }
 
     // Local DataObserver
@@ -81,6 +102,17 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onChanged(RemoteModel remoteModel) {
             setTextRemote(remoteModel.getValue());
+        }
+    };
+
+    private Observer<List<LocalModel>> dbDataObserver = new Observer<List<LocalModel>>() {
+        @Override
+        public void onChanged(List<LocalModel> localModels) {
+            StringBuilder value = new StringBuilder("LocalModels:\n");
+            for (LocalModel model : localModels) {
+                value.append("\n").append(model.getValue());
+            }
+            setTextDB(value.toString());
         }
     };
 }
